@@ -1,0 +1,156 @@
+1) Problem
+
+Doctors/nurses waste time reading long medical notes.
+So they need a tool that quickly summarizes and gives next actions.
+
+2) Solution (What we are building)
+
+MediSummary is a web app that uses Gemini 3 API to:
+
+Summarize any clinical/healthcare note
+
+Make a simple checklist of next steps
+
+Convert the same note into patient-friendly explanation
+
+✅ It supports doctors + patients
+✅ It improves efficiency and understanding
+✅ It’s safe because it does not diagnose
+
+3) Users
+
+Primary Users
+
+Doctors
+
+Nurses / Hospital staff
+
+Secondary Users
+
+Patients (only for explanation mode)
+
+4) MVP Features (Only 3 features)
+Feature 1: Quick Summary
+
+Input: clinical note text
+Output:
+
+5 bullet summary
+
+1 short paragraph summary
+
+Feature 2: Action Checklist
+
+Output:
+
+Follow-up tasks
+
+Tests mentioned
+
+Medicines mentioned
+
+Any missing info like:
+
+Allergies not mentioned
+
+Follow-up date not mentioned
+
+Feature 3: Patient Explanation
+
+Output in very simple language:
+
+What happened
+
+What to do next
+
+Warning signs
+
+Follow-up instructions
+
+5) Main Screens (Simple UI)
+Screen 1: Home
+
+Title: MediSummary
+
+Text box: Paste your note
+
+Buttons:
+✅ Summarize
+✅ Checklist
+✅ Patient Explanation
+
+Sample Note button (for demo)
+
+Disclaimer text
+
+Screen 2: Output
+
+Shows result + copy button
+
+Copy output
+
+Regenerate (optional)
+
+6) How it Works (Workflow)
+
+User pastes healthcare note
+
+Selects mode (Summary / Checklist / Patient)
+
+Click Generate
+
+Gemini 3 gives response
+
+User copies and uses it
+
+7) Important Rules (Hackathon Requirement)
+
+✅ Use Gemini 3 API
+✅ Use only synthetic/public data
+✅ Must display disclaimer:
+
+Disclaimer
+
+“This tool is not medical advice.”
+
+“Output is only based on the text you provide.”
+
+“Doctor review is required.”
+
+8) API (Very Basic)
+POST /generate
+
+Request:
+
+{
+  "mode": "summary",
+  "note": "text here"
+}
+
+
+Response:
+
+{
+  "output": "Gemini response here"
+}
+
+9) Example Prompt (Simple + Safe)
+
+System prompt
+
+You are a healthcare note assistant. Summarize and simplify the given text. Do not diagnose. Only use the given note.
+
+User prompt
+
+Mode: Summary
+Give 5 bullet points + 1 paragraph summary. If info is missing, say “Not mentioned”.
+
+10) Limitations (Must mention)
+
+Uses only synthetic/public demo notes
+
+AI may make mistakes
+
+Not for real clinical use
+
+Needs human verification
