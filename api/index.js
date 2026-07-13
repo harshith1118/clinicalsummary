@@ -7,16 +7,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-if (!process.env.GEMINI_API_KEY) {
-  console.error("ERROR: GEMINI_API_KEY is missing");
-}
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const apiKey = process.env.GEMINI_API_KEY;
+const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
 app.post('/generate', async (req, res) => {
   try {
+    if (!apiKey) {
+      return res.json({ output: "Set GEMINI_API_KEY in Vercel environment variables to use the AI features." });
+    }
+
     const { mode, note } = req.body;
-    const model = genAI.getGenerativeModel({ model: "gemini-3-flash-preview" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     let prompt = "";
     const base = "You are a healthcare note assistant. Do not diagnose. Only use the given note. ";
@@ -43,7 +44,7 @@ app.post('/generate', async (req, res) => {
     const text = response.text();
     res.json({ output: text });
   } catch (error) {
-    res.status(500).json({ error: `Failed to generate content: ${error.message || error}` });
+    res.json({ output: "AI service unavailable. Check your GEMINI_API_KEY or try again later." });
   }
 });
 
