@@ -1,0 +1,14 @@
+{
+  "buildCommand": "cd client && npm run build",
+  "outputDirectory": "client/dist",
+  "rewrites": [
+    { "source": "/generate", "destination": "/api" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "functions": {
+    "api/index.js": {
+      "memory": 300,
+      "maxDuration": 60
+    }
+  }
+}

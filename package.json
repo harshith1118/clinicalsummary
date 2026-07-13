@@ -1,0 +1,17 @@
+{
+  "name": "medisummary",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "cd server && node server.js",
+    "dev:client": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "start": "cd server && node server.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1"
+  }
+}
