@@ -10,15 +10,15 @@ app.use(express.json());
 const apiKey = process.env.GEMINI_API_KEY;
 const genAI = apiKey ? new GoogleGenerativeAI(apiKey) : null;
 
+const MODELS = ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-2.0-flash-lite"];
+
 app.post('/generate', async (req, res) => {
   try {
     if (!apiKey) {
-      return res.json({ output: "Set GEMINI_API_KEY in Vercel environment variables to use the AI features." });
+      return res.json({ output: "Set GEMINI_API_KEY in Vercel environment variables." });
     }
 
     const { mode, note } = req.body;
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
-
     let prompt = "";
     const base = "You are a healthcare note assistant. Do not diagnose. Only use the given note. ";
 
@@ -39,12 +39,25 @@ app.post('/generate', async (req, res) => {
         return res.status(400).json({ error: "Invalid mode" });
     }
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
-    res.json({ output: text });
+    let output = "";
+    for (const modelName of MODELS) {
+      try {
+        const model = genAI.getGenerativeModel({ model: modelName });
+        const result = await model.generateContent(prompt);
+        output = (await result.response).text();
+        break;
+      } catch (e) {
+        console.error(`${modelName} failed:`, e.message, e.status);
+      }
+    }
+
+    if (!output) {
+      return res.json({ output: "AI service unavailable. Check your GEMINI_API_KEY or try again later." });
+    }
+    res.json({ output });
   } catch (error) {
-    res.json({ output: "AI service unavailable. Check your GEMINI_API_KEY or try again later." });
+    console.error("Unexpected error:", error.message, error.stack);
+    res.json({ output: "Something went wrong. Please try again." });
   }
 });
 
